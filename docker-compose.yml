@@ -1,0 +1,18 @@
+version: '3'
+services:
+  hadoop-1:
+    image: sequenceiq/hadoop-docker:2.7.1
+    networks:
+      hadoop-network:
+        ipv4_address: 172.24.0.2
+    volumes:
+    - ./generated/hadoop_files:/tmp
+    - ./generated/ssh:/root/.ssh
+
+networks:
+  hadoop-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.24.0.0/16
