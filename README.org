@@ -1,0 +1,4 @@
+#+STARTUP: hidestars , indent
+
+* HADOOP-COMPOSE
+** เทสภาษาไทย
