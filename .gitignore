@@ -1,1 +1,9 @@
+# ignore generated file
 generated
+
+# ignore generated key
+id_rsa
+id_rsa.pub
+
+# emacs tmpfiles
+.#*
