@@ -1,4 +1,68 @@
-#+STARTUP: hidestars , indent
-
 * HADOOP-COMPOSE
-** เทสภาษาไทย
+This repository is introduction to use hadoop in pseudo distributed mode in docker, by using image from [[https://hub.docker.com/r/sequenceiq/hadoop-docker/][sequenceiq/hadoop-docker]] and use docker-compose file.
+** Prerequisite
+- You have basic about Docker and container system.
+
+** Docker Image Charateristic (sequenceiq/hadoop-docker:2.7.1) 
+- Hadoop version 2.7.1
+- Base on custom CentOS 6.5 image.
+- Run sshd with pre-generate ssh-key and config (require by hadoop script). We can use this as SSH Tunnel too.
+- Run each hadoop process as a background, and run sleep as foreground process)
+- Hadoop data store in =/tmp= with pre-format hdfs.
+Other detail you can find in [[https://github.com/sequenceiq/hadoop-docker][here]].
+
+** This repository
+*** init.sh
+We have 2 major problem.
+- We wil generate new ssh-key (for security reason) by 
+  1. Generate new ssh-key in repository root path.
+  2. Copy =/root/.ssh/= directory in container to =<repo>/generated/ssh= directory on host machine
+  3. Replace image's ssh-key with new ssh-key in =<repo>/generated/ssh= 
+  4. Mount =<repo>/generated/ssh= back to container.
+- Because of this image pre-format hdfs, and we want persistent hadoop data, so we store hadoop data by,
+  1. Copy whole =/tmp= (hadoop data) directory to =<repo>/generated/hadoop_files= on host machine 
+  2. Mount =<repo>/generated/ssh= back to container.
+And this script require /root/ user to execute.
+*** docker-compose.yml
+"Compose is a tool for defining and running multi-container Docker applications"^[[https://docs.docker.com/compose/overview/][{1}]]
+In summary, you write compose script, run docker-compose once, instead of run multiple docker command with complex of optional flag.
+Please read compose [[https://docs.docker.com/compose/overview/][docs]] for furthur detail.
+This compose file will setup new network for assign static container ip address, mount nessesary directory, and running container from image.
+You can change the ip address in =ipv4_address= line and correct subnet in =- subnet= line.
+
+** Installation
+/Assume your current terminal is root priviledged or using sudo command/
+- Run =init.sh= script.
+  #+BEGIN_SRC bash
+  # ./init.sh
+  #+END_SRC
+- Next, we will run image with docker-compose.
+  #+BEGIN_SRC bash
+  # docker-compose up -d
+  #+END_SRC
+  docker-compose will create container name "hadoopcompose_hadoop-1_1" and detach (option =-d=) to the background.
+- Wait a moment, container initializing hadoop process. If finish you can see log from =docker logs= like
+  #+BEGIN_SRC
+  Starting sshd: [  OK  ]
+  18/03/02 08:28:08 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+  Starting namenodes on [090d01fc97e6]
+  090d01fc97e6: starting namenode, logging to /usr/local/hadoop/logs/hadoop-root-namenode-090d01fc97e6.out
+  localhost: starting datanode, logging to /usr/local/hadoop/logs/hadoop-root-datanode-090d01fc97e6.out
+  Starting secondary namenodes [0.0.0.0]
+  0.0.0.0: starting secondarynamenode, logging to /usr/local/hadoop/logs/hadoop-root-secondarynamenode-090d01fc97e6.out
+  18/03/02 08:28:22 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+  starting yarn daemons
+  starting resourcemanager, logging to /usr/local/hadoop/logs/yarn--resourcemanager-090d01fc97e6.out
+  localhost: starting nodemanager, logging to /usr/local/hadoop/logs/yarn-root-nodemanager-090d01fc97e6.out
+  #+END_SRC
+- Now you can ssh to container with ip =172.24.0.2= port =2122= or use =docker exec= to run command in the container.
+
+** Caveat
+The initial script (init.sh) and docker-compose only run in Linux/Bash (Tested on Fedora 27 on x86_64 bare metal machine).
+Feel free to edit, make it able to run in Windows and MacOS, and send pull request back to me :).
+
+** Further reading
+- [[https://docs.docker.com/compose/install/][Install Docker Compose]]
+- [[https://docs.docker.com/compose/compose-file/][Compose file version 3 reference]] 
+
+
