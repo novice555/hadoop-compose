@@ -1,5 +1,3 @@
-#+OPTIONS: \n:t
-
 * HADOOP-COMPOSE
 This repository is introduction to use hadoop in pseudo distributed mode in docker, by using image from [[https://hub.docker.com/r/sequenceiq/hadoop-docker/][sequenceiq/hadoop-docker]] and use docker-compose file.
 ** Prerequisite
@@ -13,7 +11,7 @@ This repository is introduction to use hadoop in pseudo distributed mode in dock
 - Hadoop data store in =/tmp= with pre-format hdfs.
 Other detail you can find in [[https://github.com/sequenceiq/hadoop-docker][here]].
 
-** This repository
+** About file in this repository
 *** init.sh
 We have 2 major problem.
 - We wil generate new ssh-key (for security reason) by 
@@ -26,11 +24,13 @@ We have 2 major problem.
   - Mount =<repo>/generated/ssh= back to container.
 And this script require /root/ user to execute.
 *** docker-compose.yml
+#+BEGIN_VERSE
 "Compose is a tool for defining and running multi-container Docker applications"^[[https://docs.docker.com/compose/overview/][{1}]]
 In summary, you write compose script, run docker-compose once, instead of run multiple docker command with complex of optional flag.
 Please read compose [[https://docs.docker.com/compose/overview/][docs]] for furthur detail.
 This compose file will setup new network for assign static container ip address, mount nessesary directory, and running container from image.
 You can change the ip address in =ipv4_address= line and correct subnet in =- subnet= line.
+#+END_VERSE
 
 ** Installation
 /Assume your current terminal is root priviledged or using sudo command/
