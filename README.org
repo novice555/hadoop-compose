@@ -1,3 +1,5 @@
+#+OPTIONS: \n:t
+
 * HADOOP-COMPOSE
 This repository is introduction to use hadoop in pseudo distributed mode in docker, by using image from [[https://hub.docker.com/r/sequenceiq/hadoop-docker/][sequenceiq/hadoop-docker]] and use docker-compose file.
 ** Prerequisite
@@ -15,13 +17,13 @@ Other detail you can find in [[https://github.com/sequenceiq/hadoop-docker][here
 *** init.sh
 We have 2 major problem.
 - We wil generate new ssh-key (for security reason) by 
-  1. Generate new ssh-key in repository root path.
-  2. Copy =/root/.ssh/= directory in container to =<repo>/generated/ssh= directory on host machine
-  3. Replace image's ssh-key with new ssh-key in =<repo>/generated/ssh= 
-  4. Mount =<repo>/generated/ssh= back to container.
+  - Generate new ssh-key in repository root path.
+  - Copy =/root/.ssh/= directory in container to =<repo>/generated/ssh= directory on host machine
+  - Replace image's ssh-key with new ssh-key in =<repo>/generated/ssh= 
+  - Mount =<repo>/generated/ssh= back to container.
 - Because of this image pre-format hdfs, and we want persistent hadoop data, so we store hadoop data by,
-  1. Copy whole =/tmp= (hadoop data) directory to =<repo>/generated/hadoop_files= on host machine 
-  2. Mount =<repo>/generated/ssh= back to container.
+  - Copy whole =/tmp= (hadoop data) directory to =<repo>/generated/hadoop_files= on host machine 
+  - Mount =<repo>/generated/ssh= back to container.
 And this script require /root/ user to execute.
 *** docker-compose.yml
 "Compose is a tool for defining and running multi-container Docker applications"^[[https://docs.docker.com/compose/overview/][{1}]]
@@ -34,13 +36,15 @@ You can change the ip address in =ipv4_address= line and correct subnet in =- su
 /Assume your current terminal is root priviledged or using sudo command/
 - Run =init.sh= script.
   #+BEGIN_SRC bash
-  # ./init.sh
+  ./init.sh
   #+END_SRC
+
 - Next, we will run image with docker-compose.
   #+BEGIN_SRC bash
-  # docker-compose up -d
+  docker-compose up -d
   #+END_SRC
   docker-compose will create container name "hadoopcompose_hadoop-1_1" and detach (option =-d=) to the background.
+
 - Wait a moment, container initializing hadoop process. If finish you can see log from =docker logs= like
   #+BEGIN_SRC
   Starting sshd: [  OK  ]
@@ -55,6 +59,7 @@ You can change the ip address in =ipv4_address= line and correct subnet in =- su
   starting resourcemanager, logging to /usr/local/hadoop/logs/yarn--resourcemanager-090d01fc97e6.out
   localhost: starting nodemanager, logging to /usr/local/hadoop/logs/yarn-root-nodemanager-090d01fc97e6.out
   #+END_SRC
+
 - Now you can ssh to container with ip =172.24.0.2= port =2122= or use =docker exec= to run command in the container.
 
 ** Caveat
