@@ -28,15 +28,11 @@ We have 2 major problem.
   - Mount =<repo>/generated/ssh= back to container.
 And this script require /root/ user to execute.
 *** docker-compose.yml
-"Compose is a tool for defining and running multi-container Docker applications"^[[https://docs.docker.com/compose/overview/][{1}]]
-
-In summary, you write compose script, run docker-compose once, instead of run multiple docker command with complex of optional flag.
-
-Please read compose [[https://docs.docker.com/compose/overview/][docs]] for furthur detail.
-
-This compose file will setup new network for assign static container ip address, mount nessesary directory, and running container from image.
-
-You can change the ip address in =ipv4_address= line and correct subnet in =- subnet= line.
+"Compose is a tool for defining and running multi-container Docker applications"^[[https://docs.docker.com/compose/overview/][{1}]] <br />
+In summary, you write compose script, run docker-compose once, instead of run multiple docker command with complex of optional flag. <br />
+Please read compose [[https://docs.docker.com/compose/overview/][docs]] for furthur detail. <br />
+This compose file will setup new network for assign static container ip address, mount nessesary directory, and running container from image. <br />
+You can change the ip address in =ipv4_address= line and correct subnet in =- subnet= line. <br />
 
 ** Installation
 /Assume your current terminal is root priviledged or using sudo command/
